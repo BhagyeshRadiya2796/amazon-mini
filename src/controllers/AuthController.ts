@@ -4,9 +4,9 @@ import { Request, Response } from 'express' // eslint-disable-line
 import { ResponseHandler } from '../helpers/ResponseHandler'
 import { User } from './../models' // eslint-disable-line
 import { UserService } from '../services/UserService'
-import { comparePasswords } from '../helpers/constants'
-import { createToken } from '../helpers/jwtHelper'
 import { AuthService } from '../services/AuthService'
+import { createUser, loginUser } from '../validation/UserSchema'
+import { SchemaValidate } from '../middleware'
 
 export class AuthController implements ControllerBase {
     public path = '/auth'
@@ -21,8 +21,8 @@ export class AuthController implements ControllerBase {
     }
 
     public initRoutes () {
-      this.router.post(`${this.path}/login`, this.login)
-      this.router.post(`${this.path}/signup`, this.signUp)
+      this.router.post(`${this.path}/login`, SchemaValidate(loginUser), this.login)
+      this.router.post(`${this.path}/signup`, SchemaValidate(createUser), this.signUp)
     }
 
     login = async (req: Request, res: Response) => {
@@ -39,15 +39,11 @@ export class AuthController implements ControllerBase {
     signUp = async (req: Request, res: Response) => {
       const user: User = req.body as User
       const { role } = req.query
-      if (Object.keys(user).length !== 0) {
-        const response = await this.userService.createUser(user, role)
-        if (response.isSuccess) {
-          ResponseHandler.success(res, response.getValue())
-        } else {
-          ResponseHandler.fail(res, response.getError())
-        }
+      const response = await this.userService.createUser(user, role)
+      if (response.isSuccess) {
+        ResponseHandler.success(res, response.getValue())
       } else {
-        ResponseHandler.fail(res, { message: 'Invalid Request body', code: 400 })
+        ResponseHandler.fail(res, response.getError())
       }
     }
 }

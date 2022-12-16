@@ -5,9 +5,11 @@ import {ControllerBase} from '../interfaces/ControllerBase' // eslint-disable-li
 import { ProductService } from '../services/ProductService'
 import { Product } from '../models' // eslint-disable-line
 import { AuthMiddleware } from '../middleware/AuthMiddleware'
+import { GrantAccess, SchemaValidate } from '../middleware'
+import { createProduct } from '../validation/productSchema'
 
 export class ProductController implements ControllerBase {
-  public path = '/product'
+  public path = '/products'
   public router = express.Router()
   public productService: ProductService
 
@@ -17,24 +19,22 @@ export class ProductController implements ControllerBase {
   }
 
   public initRoutes () {
-    // this.router.get('/products', this.getAll)
-    this.router.get(`${this.path}/:productId`, this.getById)
-    this.router.post(this.path, AuthMiddleware, this.post)
-    this.router.put(`${this.path}/:productId`, AuthMiddleware ,this.update)
-    // this.router.delete(this.path + '/:productId', this.delete)
+    this.router.get(`${this.path}`, AuthMiddleware, GrantAccess('products'), this.getAll)
+    this.router.get(`${this.path}/:productId`, AuthMiddleware, GrantAccess('products'), this.getById)
+    this.router.post(this.path, AuthMiddleware, GrantAccess('products'), SchemaValidate(createProduct), this.post)
+    this.router.put(`${this.path}/:productId`, AuthMiddleware, GrantAccess('products'),this.update)
+    this.router.delete(`${this.path}/:productId`, AuthMiddleware, GrantAccess('products'), this.delete)
   }
 
   post = async (req: Request, res: Response) => {
     const data: Product = req.body as Product
-    if (Object.keys(data).length !== 0) {
-      const response = await this.productService.createProduct(data)
-      if(response.isSuccess){
-        ResponseHandler.success(res, response.getValue())
-      }else {
-        ResponseHandler.fail(res, response.getError())
-      }
+    const authUser = res.locals.user
+    data.sellerId = authUser.id
+    const response = await this.productService.createProduct(data)
+    if(response.isSuccess){
+      ResponseHandler.success(res, response.getValue())
     }else {
-      ResponseHandler.fail(res, { message: 'Invalid Request body', code: 400})
+      ResponseHandler.fail(res, response.getError())
     }
   }
 
@@ -52,15 +52,15 @@ export class ProductController implements ControllerBase {
     }
   }
 
-  // getAll = async (req: Request, res: Response) => {
-  //   const filters = req.query
-  //   const response = await this.productService.getProducts(filters)
-  //   if (response.isSuccess) {
-  //     ResponseHandler.success(res, response.getValue())
-  //   } else {
-  //     ResponseHandler.fail(res, response.getError())
-  //   }
-  // }
+  getAll = async (req: Request, res: Response) => {
+    const filters = req.query
+    const response = await this.productService.getProducts(filters)
+    if (response.isSuccess) {
+      ResponseHandler.success(res, response.getValue())
+    } else {
+      ResponseHandler.fail(res, response.getError())
+    }
+  }
 
   update = async (req: Request, res: Response) => {
     const pathParams = req.params

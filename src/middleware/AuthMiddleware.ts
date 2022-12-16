@@ -1,13 +1,8 @@
-import { JwtPayload } from 'jsonwebtoken' // eslint-disable-line
 import { Request, Response, NextFunction } from 'express' // eslint-disable-line
 import { ResponseHandler } from '../helpers/ResponseHandler'
 import { ERROR_MESSAGES } from '../helpers/constants'
 import * as status from 'http-status'
 import { verifyToken } from '../helpers/jwtHelper'
-
-interface CustomRequest extends Request {
- token: string | JwtPayload;
-}
 
 export const AuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -15,9 +10,7 @@ export const AuthMiddleware = async (req: Request, res: Response, next: NextFunc
     if (!token) {
       throw new Error()
     }
-
-    (req as CustomRequest).token = verifyToken(token)
-
+    res.locals.user = verifyToken(token)
     next()
   } catch (err) {
     console.log('error', err)

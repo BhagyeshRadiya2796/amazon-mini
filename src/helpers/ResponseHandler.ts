@@ -13,4 +13,10 @@ export class ResponseHandler {
       errorMessage: detail.message
     })
   }
+  public static validationErrors (res: Response, errors: []) {
+    return res.status(400).json({
+      statusCode: 400,
+      errorMessages: errors
+    })
+  }
 }

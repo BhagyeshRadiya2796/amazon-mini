@@ -11,7 +11,7 @@
     "lint:fix": "standard 'src/**/*.ts?(x)' 'tests/**/*.ts?(x)' --fix",
     "seed:create": "sequelize seed:generate --name ",
     "seeding": "sequelize db:seed:all",
-    "seed:single" : ""
+    "seed:single": ""
   },
   "author": "",
   "license": "ISC",
@@ -27,11 +27,13 @@
     "ts-node": "^10.9.1"
   },
   "dependencies": {
+    "@types/joi": "^17.2.3",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "http-status": "^1.5.3",
+    "joi": "^17.7.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.19",
     "mysql2": "^2.3.3",

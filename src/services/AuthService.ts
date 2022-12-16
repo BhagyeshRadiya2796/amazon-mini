@@ -18,7 +18,8 @@ export class AuthService {
     let user: any = response.getValue()
     const isMatch = comparePasswords(user.password, requestUser.password)
     if (isMatch) {
-        const tokenUserObj = { 
+        const tokenUserObj = {
+            id: user.id, 
             email: user.email, 
             firstName: user.firstName, 
             lastName: user.lastName,

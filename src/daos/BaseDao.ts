@@ -65,7 +65,7 @@ export abstract class BaseDao<Model> implements CommonCrud<Model> {
       }
     }
 
-    async findOne (id: string): RepoResult<Model> {
+    async findOne (id: string | number): RepoResult<Model> {
       try {
         const doc = await this.model.findOne({
           where: {

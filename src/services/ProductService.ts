@@ -14,44 +14,30 @@ export class ProductService {
     return newProduct
   }
 
-//   public getProducts = async (filters) => {
-//     let { firstName, lastName, phone, email, limit, skip } = filters
-//     limit = limit ? parseInt(limit) : null
-//     skip = skip ? parseInt(skip) : null
+  public getProducts = async (filters) => {
+    let { name, limit, skip } = filters
+    limit = limit ? parseInt(limit) : null
+    skip = skip ? parseInt(skip) : null
 
-//     let whereCondition = {}
-//     if (firstName) {
-//       const condition = {
-//         firstName: {
-//           [Op.like]: `%${firstName}%`
-//         }
-//       }
-//       whereCondition = { ...whereCondition, ...condition }
-//     }
-//     if (lastName) {
-//       const condition = {
-//         lastName: {
-//           [Op.like]: `%${lastName}%`
-//         }
-//       }
-//       whereCondition = { ...whereCondition, ...condition }
-//     }
-//     if (email) {
-//       whereCondition = { ...whereCondition, email }
-//     }
-//     if (phone) {
-//       whereCondition = { ...whereCondition, phone }
-//     }
-//     const response = await this.productDao.find(
-//       {
-//         where: whereCondition,
-//         attributes: ['firstName', 'lastName', 'email', 'id', 'phone'],
-//         limit,
-//         offset: skip
-//       } as QueryParams
-//     )
-//     return response
-//   }
+    let whereCondition = {}
+    if (name) {
+      const condition = {
+        name: {
+          [Op.like]: `%${name}%`
+        }
+      }
+      whereCondition = { ...whereCondition, ...condition }
+    }
+    const response = await this.productDao.find(
+      {
+        where: whereCondition,
+        attributes: ['id', 'name', 'description', 'quantity', 'price'],
+        limit,
+        offset: skip
+      } as QueryParams
+    )
+    return response
+  }
 
   public deleteProduct = async (productId: string) => {
     const response = await this.productDao.delete(productId)
