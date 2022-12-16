@@ -28,7 +28,7 @@ UserRole.init(
       primaryKey: true
     },
     userId: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
       references: {
         model: 'users',
         key:'id'

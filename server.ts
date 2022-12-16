@@ -5,6 +5,7 @@ import { RoleController } from './src/controllers/RoleController';
 import { AuthController } from './src/controllers/AuthController';
 import { ProductController } from './src/controllers/ProductController';
 import { SERVER_PORT } from './src/helpers/constants'
+import { CartController } from './src/controllers/CartController';
 
 const app = new App({
   port: SERVER_PORT || 3000,
@@ -12,7 +13,8 @@ const app = new App({
     new UserController(),
     new RoleController(),
     new AuthController(),
-    new ProductController()
+    new ProductController(),
+    new CartController()
   ]
 })
 sequelize

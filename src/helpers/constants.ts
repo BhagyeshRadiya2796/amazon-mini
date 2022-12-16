@@ -6,7 +6,7 @@ export const DB_CONNECTION_DETAIL = {
   DB_PASSWORD: 'root',
   DB_HOST: 'localhost',
   DB_DRIVER: 'mysql',
-  DB_NAME: 'amazon'
+  DB_NAME: 'flipcart'
 }
 
 export const JWT_SECRATE = process.env.JWT_SECRATE || 'temp'
@@ -27,7 +27,25 @@ export const TABLE_NAMES = {
   PERMISSIONS: 'permissions',
   USER_ROLES: 'user_roles',
   ROLE_PERMISSIONS: 'role_permissions',
-  PRODUCT: 'products'
+  PRODUCT: 'products',
+  CART: 'carts',
+  CART_DETAIL:'cart_details',
+  ORDER: 'orders',
+  ORDER_DETAIL:'order_details'
 }
 
+export enum ORDER_STATUS {
+  PLACED,
+  CONFIRMED,
+  SHIPPED,
+  DELIVERED,
+  CANCELLED
+}
+export const ORDER_STATUS_ARRAY = [
+  'PLACED',
+  'CONFIRMED',
+  'SHIPPED',
+  'DELIVERED',
+  'CANCELLED'
+]
 export const SERVER_PORT = process.env.PORT

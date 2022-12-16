@@ -7,7 +7,8 @@ interface ProductAttributes {
   name: string
   description: string
   price: number
-  userId: string
+  sellerId: string
+  quantity: number
   createdAt?: Date
   updatedAt?: Date
 }
@@ -15,11 +16,13 @@ interface ProductAttributes {
 interface ProductCreationAttributes extends Optional<ProductAttributes, 'id'> {}
 
 class Product extends Model<ProductAttributes, ProductCreationAttributes > implements ProductAttributes {
+    sellerId: string
     userId: string
     id: string
     name: string
     description: string
     price: number
+    quantity: number
     createdAt?: Date | undefined
     updatedAt?: Date | undefined
 
@@ -28,8 +31,8 @@ Product.init(
   {
     id: {
       allowNull: false,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV1,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true
     },
     name: {
@@ -43,8 +46,11 @@ Product.init(
     price: {
       type: DataTypes.INTEGER
     },
-    userId: {
-      type: DataTypes.STRING,
+    quantity: {
+      type: DataTypes.INTEGER
+    },
+    sellerId: {
+      type: DataTypes.UUID,
       references: {
         model: 'users',
         key: 'id'
